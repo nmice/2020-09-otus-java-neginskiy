@@ -1,0 +1,22 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow'
+}
+
+sourceCompatibility = JavaVersion.VERSION_15
+targetCompatibility = JavaVersion.VERSION_15
+
+dependencies {
+    // This dependency is used by the application.
+}
+
+shadowJar {
+    archiveBaseName.set('arrayListDIY')
+    archiveVersion.set('0.1')
+    archiveClassifier.set('')
+    manifest {
+        attributes 'Main-Class': 'ru.otus.DIYarrayListUse'
+    }
+}
+
+tasks.build.dependsOn tasks.shadowJar
