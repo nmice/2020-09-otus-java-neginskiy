@@ -32,7 +32,8 @@ public class MoneyStorageService {
         if (requestedSumm % 100 != 0) {
             throw new IllegalArgumentException("The minimum denomination of available banknotes - 100RUR.");
         }
-        if (requestedSumm > getBalance()) {
+        int atmBalance = getBalance();
+        if (requestedSumm > atmBalance) {
             throw new IllegalArgumentException("Insufficient funds at the ATM.");
         }
         return moneyStorage.issueMoney(requestedSumm);

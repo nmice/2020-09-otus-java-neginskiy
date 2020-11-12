@@ -1,6 +1,5 @@
 package ru.otus.atm.model;
 
-import lombok.Getter;
 import ru.otus.atm.enums.NominalType;
 import ru.otus.atm.service.MoneyStorageService;
 
@@ -37,5 +36,4 @@ public class AtmEmulator {
         System.out.println("BALANCE IS " + atmBalance + "RUR.");
         return atmBalance;
     }
-
 }

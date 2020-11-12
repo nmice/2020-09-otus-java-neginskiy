@@ -33,7 +33,7 @@ public class MoneyStorage {
         int fiveThousandAvailable = moneyCellByNominalMap.get(FIVE_THOUSAND).getBanknotesBalance();
         if (fiveThousandAvailable < fiveThousandRequired) {
             balance -= FIVE_THOUSAND.getValue() * fiveThousandAvailable;
-            fiveThousandRequired = FIVE_THOUSAND.getValue();
+            fiveThousandRequired = fiveThousandAvailable;
         } else {
             balance = balance % FIVE_THOUSAND.getValue();
         }
@@ -42,7 +42,7 @@ public class MoneyStorage {
         int thousandAvailable = moneyCellByNominalMap.get(THOUSAND).getBanknotesBalance();
         if (thousandAvailable < thousandRequired) {
             balance -= THOUSAND.getValue() * thousandAvailable;
-            thousandRequired = THOUSAND.getValue();
+            thousandRequired = thousandAvailable;
         } else {
             balance = balance % THOUSAND.getValue();
         }
@@ -51,6 +51,7 @@ public class MoneyStorage {
         int fiveHundredAvailable = moneyCellByNominalMap.get(FIVE_HUNDRED).getBanknotesBalance();
         if (fiveHundredAvailable < fiveHundredRequired) {
             balance -= FIVE_HUNDRED.getValue() * fiveHundredAvailable;
+            fiveHundredRequired = fiveHundredAvailable;
         } else {
             balance = balance % FIVE_HUNDRED.getValue();
         }
@@ -59,6 +60,7 @@ public class MoneyStorage {
         int hundredAvailable = moneyCellByNominalMap.get(HUNDRED).getBanknotesBalance();
         if (hundredAvailable < hundredRequired) {
             balance -= HUNDRED.getValue() * hundredAvailable;
+            hundredRequired = hundredAvailable;
         } else {
             balance = balance % HUNDRED.getValue();
         }
