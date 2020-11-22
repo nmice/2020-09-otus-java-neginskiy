@@ -3,7 +3,9 @@ package ru.otus.atm.model;
 import lombok.Getter;
 import ru.otus.atm.enums.NominalType;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static ru.otus.atm.enums.NominalType.*;
@@ -11,84 +13,76 @@ import static ru.otus.atm.enums.NominalType.*;
 @Getter
 public class MoneyStorage {
 
-    private final Map<NominalType, MoneyCell> moneyCellByNominalMap;
-
-    {
-        moneyCellByNominalMap = new HashMap<>();
-        moneyCellByNominalMap.put(HUNDRED, new MoneyCell(1000));
-        moneyCellByNominalMap.put(FIVE_HUNDRED, new MoneyCell(1000));
-        moneyCellByNominalMap.put(THOUSAND, new MoneyCell(1000));
-        moneyCellByNominalMap.put(FIVE_THOUSAND, new MoneyCell(1000));
-    }
+    private final List<MoneyCell> moneyCellList = Arrays.asList(new MoneyCell(HUNDRED),
+            new MoneyCell(FIVE_HUNDRED),
+            new MoneyCell(THOUSAND),
+            new MoneyCell(FIVE_THOUSAND));
 
     public void acceptMoney(Map<NominalType, Integer> banknotesNumberByNominalMap) {
-        banknotesNumberByNominalMap.forEach((key, value) -> moneyCellByNominalMap.get(key)
-                .setBanknotesBalance(moneyCellByNominalMap.get(key).getBanknotesBalance() + value));
+        for (MoneyCell mc : moneyCellList) {
+            mc.addBanknotes(banknotesNumberByNominalMap.get(mc.getNominalType()));
+        }
     }
 
     public Map<NominalType, Integer> issueMoney(int requestedSumm) {
-        int balance = requestedSumm;
-
-        int fiveThousandRequired = balance / FIVE_THOUSAND.getValue();
-        int fiveThousandAvailable = moneyCellByNominalMap.get(FIVE_THOUSAND).getBanknotesBalance();
-        if (fiveThousandAvailable < fiveThousandRequired) {
-            balance -= FIVE_THOUSAND.getValue() * fiveThousandAvailable;
-            fiveThousandRequired = fiveThousandAvailable;
+        if (checkBanknotesBalance(requestedSumm)) {
+            return reduceBanknotesBalance(requestedSumm);
         } else {
-            balance = balance % FIVE_THOUSAND.getValue();
-        }
-
-        int thousandRequired = balance / THOUSAND.getValue();
-        int thousandAvailable = moneyCellByNominalMap.get(THOUSAND).getBanknotesBalance();
-        if (thousandAvailable < thousandRequired) {
-            balance -= THOUSAND.getValue() * thousandAvailable;
-            thousandRequired = thousandAvailable;
-        } else {
-            balance = balance % THOUSAND.getValue();
-        }
-
-        int fiveHundredRequired = balance / FIVE_HUNDRED.getValue();
-        int fiveHundredAvailable = moneyCellByNominalMap.get(FIVE_HUNDRED).getBanknotesBalance();
-        if (fiveHundredAvailable < fiveHundredRequired) {
-            balance -= FIVE_HUNDRED.getValue() * fiveHundredAvailable;
-            fiveHundredRequired = fiveHundredAvailable;
-        } else {
-            balance = balance % FIVE_HUNDRED.getValue();
-        }
-
-        int hundredRequired = balance / HUNDRED.getValue();
-        int hundredAvailable = moneyCellByNominalMap.get(HUNDRED).getBanknotesBalance();
-        if (hundredAvailable < hundredRequired) {
-            balance -= HUNDRED.getValue() * hundredAvailable;
-            hundredRequired = hundredAvailable;
-        } else {
-            balance = balance % HUNDRED.getValue();
-        }
-
-        if (balance > 0) {
             throw new IllegalArgumentException("Unfortunately, this amount is not available for issuing, " +
                     "and there are not enough banknotes to exchange.");
         }
-        Map<NominalType, Integer> resultMap = new HashMap<>();
-        resultMap.put(FIVE_THOUSAND, fiveThousandRequired);
-        resultMap.put(THOUSAND, thousandRequired);
-        resultMap.put(FIVE_HUNDRED, fiveHundredRequired);
-        resultMap.put(HUNDRED, hundredRequired);
-        reduceRemainingValues(resultMap);
-        return resultMap;
     }
 
-    private void reduceRemainingValues(Map<NominalType, Integer> resultMap) {
-        resultMap.forEach((key, value) -> moneyCellByNominalMap.get(key).setBanknotesBalance(
-                moneyCellByNominalMap.get(key).getBanknotesBalance() - value));
+    private boolean checkBanknotesBalance(int requestedSumm) {
+        List<NominalType> ntList = Arrays.asList(NominalType.values());
+        ntList.sort((a, b) -> b.getValue().compareTo(a.getValue()));
+
+        int balance = requestedSumm;
+
+        for (NominalType nt : ntList) {
+            int required = balance / nt.getValue();
+            int available = getCellByNominal(nt).getBanknotesBalance();
+            if (available < required) {
+                balance -= nt.getValue() * available;
+            } else {
+                balance = balance % nt.getValue();
+            }
+        }
+        return balance == 0;
+    }
+
+    private Map<NominalType, Integer> reduceBanknotesBalance(int requestedSumm) {
+        List<NominalType> ntList = Arrays.asList(NominalType.values());
+        ntList.sort((a, b) -> b.getValue().compareTo(a.getValue()));
+
+        int balance = requestedSumm;
+
+        Map<NominalType, Integer> resultMap = new HashMap<>();
+        for (NominalType nt : ntList) {
+            int required = balance / nt.getValue();
+            int available = getCellByNominal(nt).getBanknotesBalance();
+            if (available < required) {
+                balance -= nt.getValue() * available;
+                getCellByNominal(nt).setBanknotesBalance(0);
+                resultMap.put(nt, available);
+            } else {
+                balance = balance % nt.getValue();
+                getCellByNominal(nt).setBanknotesBalance(available - required);
+                resultMap.put(nt, required);
+            }
+        }
+        return resultMap;
     }
 
     public int getBalance() {
         int balance = 0;
-        for (NominalType nominalType : NominalType.values()) {
-            balance += moneyCellByNominalMap.get(nominalType).getBanknotesBalance()
-                    * nominalType.getValue();
+        for (MoneyCell moneyCell : moneyCellList) {
+            balance += moneyCell.getNominalType().getValue() * moneyCell.getBanknotesBalance();
         }
         return balance;
+    }
+
+    private MoneyCell getCellByNominal(NominalType nominalType) {
+        return moneyCellList.stream().filter(mc -> mc.getNominalType() == nominalType).findFirst().orElse(null);
     }
 }

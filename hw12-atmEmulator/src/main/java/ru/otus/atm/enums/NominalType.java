@@ -9,7 +9,7 @@ public enum NominalType {
     THOUSAND(1000),
     FIVE_THOUSAND(5000);
 
-    private int value;
+    private Integer value;
 
     NominalType(int value) {
         this.value = value;
