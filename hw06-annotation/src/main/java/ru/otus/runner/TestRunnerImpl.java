@@ -35,22 +35,25 @@ public class TestRunnerImpl implements TestRunner {
         int failedTestsCounter = 0;
         int successfulTestsCounter = 0;
         for (Method testMethod : testMethods) {
+            //создать экземпляр класса-теста
+            Object classToTestInstance = getClassToTestInstance(classToTest);
             try {
-                //создать экземпляр класса-теста
-                Object classToTestInstance = getClassToTestInstance(classToTest);
                 System.out.println("***TEST " + ++testCounter + " BEGIN***");
                 //выполнить все before
                 invokeMethods(beforeMethods, classToTestInstance);
                 //выполнить тестовый метод
                 invokeMethod(testMethod, classToTestInstance);
-                //выполнить все after
-                invokeMethods(afterMethods, classToTestInstance);
-                System.out.println("***TEST " + testCounter + " END***\r\n");
+                System.out.println("***TEST " + testCounter + " END***");
                 //увеличить счетчик успешных тестов
                 successfulTestsCounter++;
             } catch (Exception e) {
+                System.out.println("***TEST " + testCounter + " FAILED***");
                 //увеличить счетчик неуспешных тестов
                 failedTestsCounter++;
+            } finally {
+                //выполнить все after
+                invokeMethods(afterMethods, classToTestInstance);
+                System.out.println();
             }
         }
         printStat(testCounter, failedTestsCounter, successfulTestsCounter);

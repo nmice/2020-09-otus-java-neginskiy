@@ -28,7 +28,7 @@ import ru.otus.runner.TestRunnerImpl;
  */
 public class Main {
     public static void main(String[] args) throws Exception {
-        System.out.println("***Custom Test Framework***");
+        System.out.println("***Custom Test Framework***\r\n");
         TestRunner testRunner = new TestRunnerImpl();
             testRunner.runTestsForClass("ru.otus.test.TestClass");
     }
