@@ -10,7 +10,7 @@ Copy, Scavenge и Young Generation.
 **SerialGC**
 <br/>
 Параметры запуска:
--XX:+UseSerialGC -Xms1024m -Xmx1024m -Xlog:gc:hw08-garbageCollection/logs/gc_g1gc.log -XX:+HeapDumpOnOutOfMemoryError
+-XX:+UseSerialGC -Xms1024m -Xmx1024m -Xlog:gc:hw08-garbageCollection/logs/gc_serialgc.log -XX:+HeapDumpOnOutOfMemoryError
 При использовании SerialGC заметным недостатком были долгие паузы при сборке, достоинством можно назвать постоянство 
 в количестве сборок и времени на их выполнение.
 <br/>
@@ -18,7 +18,7 @@ Copy, Scavenge и Young Generation.
 **ParallelGC**
 <br/>
 Параметры запуска:
--XX:+UseParallelGC -Xms1024m -Xmx1024m -Xlog:gc:hw08-garbageCollection/logs/gc_g1gc.log -XX:+HeapDumpOnOutOfMemoryError
+-XX:+UseParallelGC -Xms1024m -Xmx1024m -Xlog:gc:hw08-garbageCollection/logs/gc_parallelgc.log -XX:+HeapDumpOnOutOfMemoryError
 При использовании ParallelGC плюсом была явно заметная подстройка сборщика под доступные ресурсы, используемая память 
 четко ограничивалась изначально, при этом минусом и следствием является опять же время на сборки. 
 
