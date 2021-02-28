@@ -1,22 +1,26 @@
 package ru.otus.aoplogger.proxy;
 
-import ru.otus.aoplogger.annotation.LogMethodParameters;
 import ru.otus.aoplogger.model.TestLoggingInterface;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.List;
 
 public class TestLoggingInvocationHandler implements InvocationHandler {
 
     private final TestLoggingInterface testLogging;
+    private final List<Method> annotatedMethodList;
 
-    public TestLoggingInvocationHandler(TestLoggingInterface testLogging) {
+    public TestLoggingInvocationHandler(TestLoggingInterface testLogging,
+                                        List<Method> annotatedMethodList) {
         this.testLogging = testLogging;
+        this.annotatedMethodList = annotatedMethodList;
     }
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        if (method.isAnnotationPresent(LogMethodParameters.class)) {
+        if (annotatedMethodList.contains(method)) {
             String params = getParamString(args);
             System.out.println("executed method: " + method.getName() + ", params: " + params);
         }
@@ -27,15 +31,7 @@ public class TestLoggingInvocationHandler implements InvocationHandler {
         if (args == null) {
             return "";
         }
-        StringBuilder paramBuilder = new StringBuilder();
-        int paramsNumber = args.length;
-        for (int i = 0; i < paramsNumber; i++) {
-            if (i < paramsNumber - 1) {
-                paramBuilder.append(args[i]).append(", ");
-            } else {
-                paramBuilder.append(args[i]);
-            }
-        }
-        return paramBuilder.toString();
+        String result = Arrays.deepToString(args);
+        return result.substring(1, result.length() - 1);
     }
 }
