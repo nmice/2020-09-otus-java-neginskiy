@@ -4,4 +4,5 @@ include 'hw03-arrayList'
 include 'hw12-atmEmulator'
 include 'hw06-annotation'
 include 'hw08-garbageCollection'
+include 'hw10-autoLogging'
 
