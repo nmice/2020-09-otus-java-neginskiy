@@ -13,6 +13,7 @@ public class ComplexProcessor implements Handler {
     private final List<Listener> listeners = new ArrayList<>();
     private final List<Processor> processors;
     private final Consumer<Exception> errorHandler;
+    private int exceptionCount = 0;
 
     public ComplexProcessor(List<Processor> processors, Consumer<Exception> errorHandler) {
         this.processors = processors;
@@ -27,6 +28,7 @@ public class ComplexProcessor implements Handler {
                 newMsg = pros.process(newMsg);
             } catch (Exception ex) {
                 errorHandler.accept(ex);
+                exceptionCount++;
             }
         }
         notify(msg, newMsg);
@@ -51,5 +53,9 @@ public class ComplexProcessor implements Handler {
                 ex.printStackTrace();
             }
         });
+    }
+
+    public int getExceptionCount() {
+        return exceptionCount;
     }
 }

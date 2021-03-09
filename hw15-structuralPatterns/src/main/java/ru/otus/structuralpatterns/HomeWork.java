@@ -1,5 +1,23 @@
 package ru.otus.structuralpatterns;
 
+import ru.otus.structuralpatterns.handler.ComplexProcessor;
+import ru.otus.structuralpatterns.listener.homework.ListenerHistorySaver;
+import ru.otus.structuralpatterns.model.Message;
+import ru.otus.structuralpatterns.model.ObjectForMessage;
+import ru.otus.structuralpatterns.processor.homework.ProcessorExceptionEvenSec;
+import ru.otus.structuralpatterns.processor.homework.ProcessorField11SwapField12;
+
+import java.util.Arrays;
+import java.util.List;
+
+/**
+ * Neginskiy M.B. 02.03.2021
+ * <p>
+ * ДОМАШНЕЕ ЗАДАНИЕ
+ * Обработчик сообщений
+ * Цель: Применить на практике шаблоны проектирования.
+ * Реализовать todo из модуля homework.
+ */
 public class HomeWork {
 
     /*
@@ -16,5 +34,26 @@ public class HomeWork {
            по аналогии с Demo.class
            из элеменов "to do" создать new ComplexProcessor и обработать сообщение
          */
+        var processors = List.of(new ProcessorField11SwapField12(),
+                new ProcessorExceptionEvenSec());
+
+        var complexProcessor = new ComplexProcessor(processors, (ex) -> {
+        });
+        var listenerHistorySaver = new ListenerHistorySaver();
+        complexProcessor.addListener(listenerHistorySaver);
+
+        var message = new Message.Builder(1L)
+                .field1("field1")
+                .field11("field11")
+                .field12("field12")
+                .field13(ObjectForMessage.builder().data(Arrays.asList("Elem1", "Elem2")).build())
+                .build();
+
+        var result = complexProcessor.handle(message);
+        System.out.println("result: " + result);
+        System.out.println("History: " + listenerHistorySaver.getHistoryList());
+        System.out.println("Exception: " + complexProcessor.getExceptionCount());
+
+        complexProcessor.removeListener(listenerHistorySaver);
     }
 }
