@@ -6,6 +6,7 @@ import ru.otus.structuralpatterns.model.Message;
 import java.util.ArrayList;
 import java.util.List;
 
+//todo: 4. Сделать Listener для ведения истории: старое сообщение - новое (подумайте, как сделать, чтобы сообщения не портились)
 public class ListenerHistorySaver implements Listener {
 
     private List<History> historyList = new ArrayList<>();

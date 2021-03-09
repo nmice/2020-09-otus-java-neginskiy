@@ -5,6 +5,8 @@ import ru.otus.structuralpatterns.processor.Processor;
 
 import java.util.function.Supplier;
 
+//todo: 3. Сделать процессор, который будет выбрасывать исключение в четную секунду (сделайте тест с гарантированным результатом)
+//         Секунда должна определяьться во время выполнения.
 public class ProcessorExceptionEvenSec implements Processor {
 
     private final Supplier<Long> timeProvider = System::currentTimeMillis;
