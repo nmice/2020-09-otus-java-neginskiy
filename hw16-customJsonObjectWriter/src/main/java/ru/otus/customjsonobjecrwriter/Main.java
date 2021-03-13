@@ -1,5 +1,10 @@
 package ru.otus.customjsonobjecrwriter;
 
+import com.google.gson.Gson;
+import ru.otus.customjsonobjecrwriter.mygson.MyGson;
+
+import java.util.Collections;
+
 /**
  * Neginskiy M.B. 12.03.2021
  * <p>
@@ -34,5 +39,16 @@ package ru.otus.customjsonobjecrwriter;
 public class Main {
     public static void main(String[] args) {
         System.out.println("***LETS GO***");
+
+        var myGson = new MyGson();
+        var obj = new AnyObject(22, "test", null/*new double[]{12.0}*/, Collections.singletonList(10));
+        String myJson = myGson.toJson(obj);
+        System.out.println("myGson: " + myJson);
+
+        var gson = new Gson();
+        String gsonJson = gson.toJson(obj);
+        System.out.println("  Gson: " + gsonJson);
+        /*AnyObject obj2 = gson.fromJson(myJson, AnyObject.class);
+        System.out.println(obj.equals(obj2));*/
     }
 }
