@@ -41,14 +41,14 @@ public class Main {
         System.out.println("***LETS GO***");
 
         var myGson = new MyGson();
-        var obj = new AnyObject(22, "test", null/*new double[]{12.0}*/, Collections.singletonList(10));
+        var obj = new AnyObject(22, "test", new double[]{12.01, 11}, Collections.singletonList(10));
         String myJson = myGson.toJson(obj);
-        System.out.println("myGson: " + myJson);
+        System.out.println("customGson: " + myJson);
 
         var gson = new Gson();
         String gsonJson = gson.toJson(obj);
-        System.out.println("  Gson: " + gsonJson);
-        /*AnyObject obj2 = gson.fromJson(myJson, AnyObject.class);
-        System.out.println(obj.equals(obj2));*/
+        System.out.println("originGson: " + gsonJson);
+        AnyObject obj2 = gson.fromJson(myJson, AnyObject.class);
+        System.out.println(obj.equals(obj2));
     }
 }
