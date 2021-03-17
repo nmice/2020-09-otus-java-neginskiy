@@ -6,3 +6,5 @@ include 'hw06-annotation'
 include 'hw08-garbageCollection'
 include 'hw10-autoLogging'
 include 'hw15-structuralPatterns'
+include 'hw16-customJsonObjectWriter'
+
