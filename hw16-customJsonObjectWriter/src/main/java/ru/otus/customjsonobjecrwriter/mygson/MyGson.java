@@ -58,29 +58,20 @@ public class MyGson {
     }
 
     private String objectToJsonFormatString(Object o) {
-        var result = new StringBuilder();
-        result.append("{");
         Field[] fields = o.getClass().getDeclaredFields();
-        for (int i = 0; i < fields.length; i++) {
+        List<String> jsonFormatFieldsList = new ArrayList<>();
+        for (Field field : fields) {
             Object fieldValue = null;
             try {
-                fields[i].setAccessible(true);
-                fieldValue = fields[i].get(o);
+                field.setAccessible(true);
+                fieldValue = field.get(o);
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
             if (fieldValue != null) {
-                result.append("\"")
-                        .append(fields[i].getName())
-                        .append("\"")
-                        .append(":")
-                        .append(toJson(fieldValue));
-                if (i < fields.length - 1) {
-                    result.append(",");
-                }
+                jsonFormatFieldsList.add("\"" + field.getName() + "\":" + toJson(fieldValue));
             }
         }
-        result.append("}");
-        return result.toString();
+        return "{" + String.join(",", jsonFormatFieldsList) + "}";
     }
 }
