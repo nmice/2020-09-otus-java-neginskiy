@@ -1,7 +1,7 @@
 package ru.otus.customorm.jdbc.sessionmanager;
 
-import ru.otus.customorm.core.sessionmanager.SessionManager;
-import ru.otus.customorm.core.sessionmanager.SessionManagerException;
+import ru.otus.customorm.exception.SessionManagerException;
+import ru.otus.customorm.sessionmanager.SessionManager;
 
 import javax.sql.DataSource;
 import java.sql.Connection;

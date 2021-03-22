@@ -1,11 +1,7 @@
-package ru.otus.customorm.core.model;
+package ru.otus.customorm.model;
 
 import ru.otus.customorm.annotation.Id;
 
-/**
- * @author sergey
- * created on 03.02.19.
- */
 public class Client {
     @Id
     private final long id;

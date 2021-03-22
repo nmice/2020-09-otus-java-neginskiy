@@ -1,7 +1,7 @@
 package ru.otus.customorm.jdbc.mapper;
 
 /**
- * Сохратяет объект в базу, читает объект из базы
+ * Сохраняет объект в базу, читает объект из базы
  * @param <T>
  */
 public interface JdbcMapper<T> {
@@ -12,5 +12,4 @@ public interface JdbcMapper<T> {
     void insertOrUpdate(T objectData);
 
     T findById(Object id, Class<T> clazz);
-//    List<T> findAll(Class<T> clazz);
 }

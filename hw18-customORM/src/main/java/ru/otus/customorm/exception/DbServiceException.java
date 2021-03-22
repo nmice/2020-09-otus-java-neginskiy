@@ -1,4 +1,4 @@
-package ru.otus.customorm.core.service;
+package ru.otus.customorm.exception;
 
 public class DbServiceException extends RuntimeException {
     public DbServiceException(Exception e) {

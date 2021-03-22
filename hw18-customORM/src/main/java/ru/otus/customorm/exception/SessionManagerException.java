@@ -1,5 +1,4 @@
-package ru.otus.customorm.core.sessionmanager;
-
+package ru.otus.customorm.exception;
 
 public class SessionManagerException extends RuntimeException {
     public SessionManagerException(String msg) {
