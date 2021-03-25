@@ -13,7 +13,7 @@ public class EntityClassMetaDataImpl<T> implements EntityClassMetaData<T> {
 
     public static final Predicate<Field> ID_FILTER = (field -> field.isAnnotationPresent(Id.class));
 
-    private final Class<T> clazz;
+    private final String className;
     private final List<Field> allFields;
     private final List<Field> fieldsWithoutId;
     private final Field idField;
@@ -21,7 +21,7 @@ public class EntityClassMetaDataImpl<T> implements EntityClassMetaData<T> {
 
     @SuppressWarnings("unchecked")
     public EntityClassMetaDataImpl(Class<T> clazz) {
-        this.clazz = clazz;
+        this.className = clazz.getSimpleName().toLowerCase();
         this.allFields = Arrays.asList(clazz.getDeclaredFields());
         this.idField = allFields.stream().filter(ID_FILTER).findAny().orElse(null);
         this.fieldsWithoutId = allFields.stream().filter(ID_FILTER.negate()).collect(Collectors.toList());
@@ -30,7 +30,7 @@ public class EntityClassMetaDataImpl<T> implements EntityClassMetaData<T> {
 
     @Override
     public String getName() {
-        return clazz.getSimpleName().toLowerCase();
+        return className;
     }
 
     @Override

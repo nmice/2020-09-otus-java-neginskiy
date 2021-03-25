@@ -3,14 +3,14 @@ package ru.otus.customorm;
 import org.flywaydb.core.Flyway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.otus.customorm.model.Account;
-import ru.otus.customorm.model.Client;
-import ru.otus.customorm.service.DbServiceAccountImpl;
-import ru.otus.customorm.service.DbServiceClientImpl;
 import ru.otus.customorm.datasource.HwDataSource;
 import ru.otus.customorm.jdbc.DbExecutorImpl;
 import ru.otus.customorm.jdbc.mapper.*;
 import ru.otus.customorm.jdbc.sessionmanager.SessionManagerJdbc;
+import ru.otus.customorm.model.Account;
+import ru.otus.customorm.model.Client;
+import ru.otus.customorm.service.DbServiceAccountImpl;
+import ru.otus.customorm.service.DbServiceClientImpl;
 
 import javax.sql.DataSource;
 import java.util.Optional;
@@ -62,8 +62,8 @@ public class HomeWork {
 
 // Работа с клиентами
         DbExecutorImpl<Client> dbClientExecutor = new DbExecutorImpl<>();
-        EntitySQLMetaData clientSQLMetaData = new EntitySQLMetaDataImpl(Client.class);
         EntityClassMetaData<Client> clientClassMetaData = new EntityClassMetaDataImpl<>(Client.class);
+        EntitySQLMetaData clientSQLMetaData = EntitySQLMetaDataImpl.of(clientClassMetaData);
         JdbcMapper<Client> clientDao = new JdbcMapperImpl<>(sessionManager, dbClientExecutor, clientSQLMetaData,
                 clientClassMetaData);
 
@@ -88,8 +88,8 @@ public class HomeWork {
 
 // Работа со счетом
         DbExecutorImpl<Account> dbAccountExecutor = new DbExecutorImpl<>();
-        EntitySQLMetaData accountSQLMetaData = new EntitySQLMetaDataImpl(Account.class);
         EntityClassMetaData<Account> accountClassMetaData = new EntityClassMetaDataImpl<>(Account.class);
+        EntitySQLMetaData accountSQLMetaData = EntitySQLMetaDataImpl.of(accountClassMetaData);
         JdbcMapper<Account> accountDao = new JdbcMapperImpl<>(sessionManager, dbAccountExecutor, accountSQLMetaData,
                 accountClassMetaData);
 
