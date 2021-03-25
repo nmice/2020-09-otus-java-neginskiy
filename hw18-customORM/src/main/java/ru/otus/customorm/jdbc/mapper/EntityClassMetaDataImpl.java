@@ -15,6 +15,7 @@ public class EntityClassMetaDataImpl<T> implements EntityClassMetaData<T> {
 
     private final Class<T> clazz;
     private final List<Field> allFields;
+    private final List<Field> fieldsWithoutId;
     private final Field idField;
     private final Constructor<T> constructor;
 
@@ -23,6 +24,7 @@ public class EntityClassMetaDataImpl<T> implements EntityClassMetaData<T> {
         this.clazz = clazz;
         this.allFields = Arrays.asList(clazz.getDeclaredFields());
         this.idField = allFields.stream().filter(ID_FILTER).findAny().orElse(null);
+        this.fieldsWithoutId = allFields.stream().filter(ID_FILTER.negate()).collect(Collectors.toList());
         this.constructor = (Constructor<T>) clazz.getConstructors()[0];
     }
 
@@ -48,8 +50,6 @@ public class EntityClassMetaDataImpl<T> implements EntityClassMetaData<T> {
 
     @Override
     public List<Field> getFieldsWithoutId() {
-        return allFields.stream()
-                .filter(ID_FILTER.negate())
-                .collect(Collectors.toList());
+        return fieldsWithoutId;
     }
 }
