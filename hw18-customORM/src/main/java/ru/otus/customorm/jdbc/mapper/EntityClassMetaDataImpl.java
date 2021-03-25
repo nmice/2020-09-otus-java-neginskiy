@@ -16,11 +16,14 @@ public class EntityClassMetaDataImpl<T> implements EntityClassMetaData<T> {
     private final Class<T> clazz;
     private final List<Field> allFields;
     private final Field idField;
+    private final Constructor<T> constructor;
 
+    @SuppressWarnings("unchecked")
     public EntityClassMetaDataImpl(Class<T> clazz) {
         this.clazz = clazz;
         this.allFields = Arrays.asList(clazz.getDeclaredFields());
         this.idField = allFields.stream().filter(ID_FILTER).findAny().orElse(null);
+        this.constructor = (Constructor<T>) clazz.getConstructors()[0];
     }
 
     @Override
@@ -28,10 +31,9 @@ public class EntityClassMetaDataImpl<T> implements EntityClassMetaData<T> {
         return clazz.getSimpleName().toLowerCase();
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public Constructor<T> getConstructor() {
-            return (Constructor<T>) clazz.getConstructors()[0];
+        return constructor;
     }
 
     @Override
