@@ -144,15 +144,7 @@ public class JdbcMapperImpl<T> implements JdbcMapper<T> {
 
     private Object getQueryResultValue(Field field, ResultSet rs) {
         try {
-            Class<?> type = field.getType();
-            String name = field.getName();
-            return switch (type.getSimpleName()) {
-                case "String" -> rs.getString(name);
-                case "long" -> rs.getLong(name);
-                case "int" -> rs.getInt(name);
-                case "double" -> rs.getDouble(name);
-                default -> throw new JdbcMapperException("Неподдерживаемый тип");
-            };
+            return rs.getObject(field.getName());
         } catch (SQLException e) {
             throw new JdbcMapperException(e);
         }
