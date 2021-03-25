@@ -9,7 +9,7 @@ import ru.otus.customorm.jdbc.mapper.JdbcMapper;
 
 import java.util.Optional;
 
-public class DbServiceAccountImpl implements DBService<Account,String> {
+public class DbServiceAccountImpl implements DBServiceAccount {
 
     private final JdbcMapper<Account> jdbcMapper;
     private final SessionManager sessionManager;

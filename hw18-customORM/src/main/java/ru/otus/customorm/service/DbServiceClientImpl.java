@@ -9,7 +9,7 @@ import ru.otus.customorm.jdbc.mapper.JdbcMapper;
 
 import java.util.Optional;
 
-public class DbServiceClientImpl implements DBService<Client, Long> {
+public class DbServiceClientImpl implements DBServiceClient {
 
     private final JdbcMapper<Client> jdbcMapper;
     private final SessionManager sessionManager;
@@ -22,7 +22,7 @@ public class DbServiceClientImpl implements DBService<Client, Long> {
     }
 
     @Override
-    public Long saveEntity(Client client) {
+    public long saveEntity(Client client) {
         sessionManager.beginSession();
         try {
             jdbcMapper.insertOrUpdate(client);
@@ -37,7 +37,7 @@ public class DbServiceClientImpl implements DBService<Client, Long> {
     }
 
     @Override
-    public Optional<Client> getEntityById(Long id) {
+    public Optional<Client> getEntityById(long id) {
         sessionManager.beginSession();
         try {
             Client client = jdbcMapper.findById(id, Client.class);
