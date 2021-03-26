@@ -3,68 +3,84 @@ package ru.otus.customorm.jdbc.mapper;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class EntitySQLMetaDataImpl implements EntitySQLMetaData {
 
-    private final String tableName;
-    private final List<String> allFieldsNames;
-    private final List<String> fieldsWoIdNames;
-    private final String idFieldName;
+    private final String selectAllSql;
+    private final String selectByIdSql;
+    private final String insertSql;
+    private final String insertAutoincrementSql;
+    private final String updateSql;
 
-    private EntitySQLMetaDataImpl(String tableName, List<String> allFieldsNames, List<String> fieldsWoIdNames,
-                                  String idFieldName) {
-        this.tableName = tableName;
-        this.allFieldsNames = allFieldsNames;
-        this.fieldsWoIdNames = fieldsWoIdNames;
-        this.idFieldName = idFieldName;
+    private EntitySQLMetaDataImpl(String selectAllSql, String selectByIdSql, String insertSql,
+                                  String insertAutoincrementSql, String updateSql) {
+        this.selectAllSql = selectAllSql;
+        this.selectByIdSql = selectByIdSql;
+        this.insertSql = insertSql;
+        this.insertAutoincrementSql = insertAutoincrementSql;
+        this.updateSql = updateSql;
     }
 
     public static EntitySQLMetaData of(EntityClassMetaData<?> entityClassMetaData) {
         String tableName = entityClassMetaData.getName();
-        List<String> fieldNames = entityClassMetaData.getAllFields().stream()
+        String selectAllSql = String.format("select * from %s", tableName);
+
+        String idFieldName = entityClassMetaData.getIdField().getName().toLowerCase();
+        String selectByIdSql = String.format("select * from %s where %s = ? ", tableName, idFieldName);
+
+        List<String> allFieldsNames = entityClassMetaData.getAllFields().stream()
                 .map(Field::getName)
                 .map(String::toLowerCase)
                 .collect(Collectors.toList());
+        String insertSql = getInsertQuery(allFieldsNames, tableName);
+
         List<String> fieldsWoIdNames = entityClassMetaData.getFieldsWithoutId().stream()
                 .map(Field::getName)
                 .map(String::toLowerCase)
                 .collect(Collectors.toList());
-        String idFieldName = entityClassMetaData.getIdField().getName().toLowerCase();
-        return new EntitySQLMetaDataImpl(tableName, fieldNames, fieldsWoIdNames, idFieldName);
+        String insertAutoincrementSql = getInsertQuery(fieldsWoIdNames, tableName);
+
+        String updateSql = getUpdateQuery(fieldsWoIdNames, tableName, idFieldName);
+
+        return new EntitySQLMetaDataImpl(selectAllSql, selectByIdSql, insertSql, insertAutoincrementSql, updateSql);
     }
 
     @Override
     public String getSelectAllSql() {
-        return String.format("select * from %s", tableName);
+        return selectAllSql;
     }
 
     @Override
     public String getSelectByIdSql() {
-        return String.format("select * from %s where %s = ? ", tableName,
-                idFieldName);
+        return selectByIdSql;
     }
 
     @Override
     public String getInsertSql() {
-        return getInsertQuery(allFieldsNames);
+        return insertSql;
     }
 
-    private String getInsertQuery(List<String> fieldsNames) {
+    @Override
+    public String getInsertAutoincrementSql() {
+        return insertAutoincrementSql;
+    }
+
+    @Override
+    public String getUpdateSql() {
+        return updateSql;
+    }
+
+    private static String getInsertQuery(List<String> fieldsNames, String tableName) {
         String queryFields = String.join(", ", fieldsNames);
-        String queryValues = fieldsNames.stream()
-                .map((s) -> "?")
+        String queryValues = Stream.generate(() -> "?")
+                .limit(fieldsNames.size())
                 .collect(Collectors.joining(", "));
         return String.format("insert into %s (%s) values (%s)",
                 tableName, queryFields, queryValues);
     }
 
-    @Override
-    public String getInsertAutoincrementSql() {
-        return getInsertQuery(fieldsWoIdNames);
-    }
-
-    @Override
-    public String getUpdateSql() {
+    private static String getUpdateQuery(List<String> fieldsWoIdNames, String tableName, String idFieldName) {
         String fieldsStatement = fieldsWoIdNames.stream()
                 .map(fieldName -> fieldName + " = ?")
                 .collect(Collectors.joining(", "));
