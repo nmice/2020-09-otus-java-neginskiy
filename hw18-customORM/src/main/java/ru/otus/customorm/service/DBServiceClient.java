@@ -9,7 +9,7 @@ import java.util.Optional;
  */
 public interface DBServiceClient {
 
-    long saveEntity(Client entity);
+    long saveClient(Client entity);
 
-    Optional<Client> getEntityById(long id);
+    Optional<Client> getClientById(long id);
 }

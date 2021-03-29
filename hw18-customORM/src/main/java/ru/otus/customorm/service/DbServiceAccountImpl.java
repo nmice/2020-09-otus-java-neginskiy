@@ -22,7 +22,7 @@ public class DbServiceAccountImpl implements DBServiceAccount {
     }
 
     @Override
-    public String saveEntity(Account account) {
+    public String saveAccount(Account account) {
         sessionManager.beginSession();
         try {
             jdbcMapper.insertOrUpdate(account);
@@ -37,7 +37,7 @@ public class DbServiceAccountImpl implements DBServiceAccount {
     }
 
     @Override
-    public Optional<Account> getEntityById(String id) {
+    public Optional<Account> getAccountById(String id) {
         sessionManager.beginSession();
         try {
             Account account = jdbcMapper.findById(id, Account.class);

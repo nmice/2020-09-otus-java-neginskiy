@@ -70,17 +70,17 @@ public class HomeWork {
 // Код дальше должен остаться, т.е. clientDao должен использоваться
         var dbServiceClient = new DbServiceClientImpl(clientDao, sessionManager);
 
-        var clientId = dbServiceClient.saveEntity(new Client(0, "dbServiceClient", 17));
+        var clientId = dbServiceClient.saveClient(new Client(0, "dbServiceClient", 17));
 
-        Optional<Client> clientOptional = dbServiceClient.getEntityById(clientId);
+        Optional<Client> clientOptional = dbServiceClient.getClientById(clientId);
         clientOptional.ifPresentOrElse(
                 client -> log.info("created client, name:{}", client.getName()),
                 () -> log.info("client was not created")
         );
 
-        dbServiceClient.saveEntity(new Client(clientId, "dbServiceClientUpdated", 25));
+        dbServiceClient.saveClient(new Client(clientId, "dbServiceClientUpdated", 25));
 
-        clientOptional = dbServiceClient.getEntityById(clientId);
+        clientOptional = dbServiceClient.getClientById(clientId);
         clientOptional.ifPresentOrElse(
                 client -> log.info("updated client, name:{}", client.getName()),
                 () -> log.info("client was not updated")
@@ -97,17 +97,17 @@ public class HomeWork {
 
         String accountId = UUID.randomUUID().toString();
 
-        dbServiceAccount.saveEntity(new Account(accountId, "dbServiceAccountType", 17.78));
+        dbServiceAccount.saveAccount(new Account(accountId, "dbServiceAccountType", 17.78));
 
-        Optional<Account> accountOptional = dbServiceAccount.getEntityById(accountId);
+        Optional<Account> accountOptional = dbServiceAccount.getAccountById(accountId);
         accountOptional.ifPresentOrElse(
                 account -> log.info("created account, type:{}", account.getType()),
                 () -> log.info("account was not created")
         );
 
-        dbServiceAccount.saveEntity(new Account(accountId, "dbServiceAccountTypeUpdated", 12.39));
+        dbServiceAccount.saveAccount(new Account(accountId, "dbServiceAccountTypeUpdated", 12.39));
 
-        accountOptional = dbServiceAccount.getEntityById(accountId);
+        accountOptional = dbServiceAccount.getAccountById(accountId);
         accountOptional.ifPresentOrElse(
                 account -> log.info("updated account, type:{}", account.getType()),
                 () -> log.info("account was not updated")

@@ -22,7 +22,7 @@ public class DbServiceClientImpl implements DBServiceClient {
     }
 
     @Override
-    public long saveEntity(Client client) {
+    public long saveClient(Client client) {
         sessionManager.beginSession();
         try {
             jdbcMapper.insertOrUpdate(client);
@@ -37,7 +37,7 @@ public class DbServiceClientImpl implements DBServiceClient {
     }
 
     @Override
-    public Optional<Client> getEntityById(long id) {
+    public Optional<Client> getClientById(long id) {
         sessionManager.beginSession();
         try {
             Client client = jdbcMapper.findById(id, Client.class);

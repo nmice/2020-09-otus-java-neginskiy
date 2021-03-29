@@ -9,7 +9,7 @@ import java.util.Optional;
  */
 public interface DBServiceAccount {
 
-    String saveEntity(Account entity);
+    String saveAccount(Account entity);
 
-    Optional<Account> getEntityById(String id);
+    Optional<Account> getAccountById(String id);
 }
