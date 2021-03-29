@@ -1,30 +1,36 @@
 package ru.otus.jpql.model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "client")
 public class Client {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private long id;
     @Column(name = "name")
     private String name;
     @Column(name = "age")
     private int age;
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private AddressDataSet address;
-    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
-    private List<PhoneDataSet> phones;
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<PhoneDataSet> phones = new ArrayList<>();
 
-    public Client(long id, String name, int age, AddressDataSet address, List<PhoneDataSet> phones) {
-        this.id = id;
+    public Client() {
+    }
+
+    public Client(String name, int age, AddressDataSet address, List<String> phoneNumbers) {
         this.name = name;
         this.age = age;
         this.address = address;
-        this.phones = phones;
+        this.phones = phoneNumbers.stream()
+                .map(phone -> new PhoneDataSet(phone, this))
+                .collect(Collectors.toList());
     }
 
     public long getId() {
@@ -45,10 +51,6 @@ public class Client {
 
     public List<PhoneDataSet> getPhones() {
         return phones;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public void setName(String name) {
