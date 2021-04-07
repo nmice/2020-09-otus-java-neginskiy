@@ -5,6 +5,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.otus.cacheengine.cachehw.MyCache;
 import ru.otus.cacheengine.dao.ClientDao;
 import ru.otus.cacheengine.dao.ClientDaoHibernate;
 import ru.otus.cacheengine.flyway.MigrationsExecutorFlyway;
@@ -70,7 +71,7 @@ public class Main {
         System.out.println("Client1 phones: " + clientOptional.get().getPhones());
 
 // Работа c кэшированным сервисом
-        DBServiceClient dbServiceClientWithCache = new DbServiceClientWithCacheImpl(clientDao);
+        DBServiceClient dbServiceClientWithCache = new DbServiceClientWithCacheImpl(clientDao, new MyCache<String, Client>());
         long clientId2 = dbServiceClientWithCache.saveClient(new Client("Коля", 25,
                 new AddressDataSet("Lenina st."),
                 Arrays.asList("84956666666", "89850000000")));
