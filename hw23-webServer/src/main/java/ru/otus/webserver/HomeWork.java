@@ -1,23 +1,38 @@
 package ru.otus.webserver;
 
+import org.eclipse.jetty.security.HashLoginService;
+import org.eclipse.jetty.security.LoginService;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import ru.otus.webserver.dao.ClientDao;
-import ru.otus.webserver.dao.ClientDaoHibernate;
+import ru.otus.webserver.dao.UserDaoHibernate;
+import ru.otus.webserver.flyway.MigrationsExecutor;
 import ru.otus.webserver.flyway.MigrationsExecutorFlyway;
+import ru.otus.webserver.helpers.FileSystemHelper;
 import ru.otus.webserver.hibernate.HibernateUtils;
 import ru.otus.webserver.hibernate.sessionmanager.SessionManagerHibernate;
-import ru.otus.webserver.model.AddressDataSet;
-import ru.otus.webserver.model.Client;
-import ru.otus.webserver.model.PhoneDataSet;
-import ru.otus.webserver.service.DBServiceClient;
-import ru.otus.webserver.service.DbServiceClientImpl;
+import ru.otus.webserver.model.User;
+import ru.otus.webserver.processor.TemplateProcessor;
+import ru.otus.webserver.processor.TemplateProcessorImpl;
+import ru.otus.webserver.server.UsersWebServer;
+import ru.otus.webserver.server.UsersWebServerWithSecurity;
+import ru.otus.webserver.service.auth.UserAuthService;
+import ru.otus.webserver.service.auth.UserAuthServiceImpl;
+import ru.otus.webserver.service.db.DBServiceUser;
+import ru.otus.webserver.service.db.DbServiceUserImpl;
+import ru.otus.webserver.util.DbUtils;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Optional;
+/*
+    Полезные для демо ссылки
+
+    // Стартовая страница
+    http://localhost:8080
+
+    // Страница пользователей
+    http://localhost:8080/users
+
+    // REST сервис
+    http://localhost:8080/api/user/3
+*/
 
 /**
  * Neginskiy M.B. 07.04.2021
@@ -35,46 +50,39 @@ import java.util.Optional;
  * - получить список пользователей
  */
 public class HomeWork {
-    private static final Logger log = LoggerFactory.getLogger(HomeWork.class);
-
+    private static final int WEB_SERVER_PORT = 8080;
+    private static final String TEMPLATES_DIR = "/templates/";
+    private static final String HASH_LOGIN_SERVICE_CONFIG_NAME = "realm.properties";
+    private static final String REALM_NAME = "AnyRealm";
     public static final String HIBERNATE_CFG_FILE = "hibernate.cfg.xml";
 
-    public static void main(String[] args) {
-// Общая часть
+    public static void main(String[] args) throws Exception {
+        // Общая часть
         Configuration configuration = new Configuration().configure(HIBERNATE_CFG_FILE);
 
         String dbUrl = configuration.getProperty("hibernate.connection.url");
         String dbUserName = configuration.getProperty("hibernate.connection.username");
         String dbPassword = configuration.getProperty("hibernate.connection.password");
 
-        new MigrationsExecutorFlyway(dbUrl, dbUserName, dbPassword).cleanDb();
+        MigrationsExecutor migrationsExecutor = new MigrationsExecutorFlyway(dbUrl, dbUserName, dbPassword);
+        migrationsExecutor.cleanDb();
+        migrationsExecutor.executeMigrations();
 
-        SessionFactory sessionFactory = HibernateUtils.buildSessionFactory(configuration, Client.class,
-                AddressDataSet.class, PhoneDataSet.class);
+        SessionFactory sessionFactory = HibernateUtils.buildSessionFactory(configuration, User.class);
         SessionManagerHibernate sessionManager = new SessionManagerHibernate(sessionFactory);
 
-// Работа с клиентами
-        ClientDao clientDao = new ClientDaoHibernate(sessionManager);
-        DBServiceClient dbServiceClient = new DbServiceClientImpl(clientDao);
+        DBServiceUser userService = new DbServiceUserImpl(new UserDaoHibernate(sessionManager));
+        DbUtils.fillDb(userService);
+        TemplateProcessor templateProcessor = new TemplateProcessorImpl(TEMPLATES_DIR);
+        UserAuthService userAuthService = new UserAuthServiceImpl(userService);
 
-        long clientId = dbServiceClient.saveClient(new Client("Вася", 23,
-                new AddressDataSet("Marx st."),
-                Collections.singletonList("84950010203")));
-        Optional<Client> clientOptional = dbServiceClient.getClientById(clientId);
-        clientOptional.ifPresentOrElse(
-                client -> log.info("created client, name:{}", client.getName()),
-                () -> log.info("client was not created")
-        );
-        System.err.println("Client1 phones: " + clientOptional.get().getPhones());
+        String hashLoginServiceConfigPath = FileSystemHelper.localFileNameOrResourceNameToFullPath(HASH_LOGIN_SERVICE_CONFIG_NAME);
+        LoginService loginService = new HashLoginService(REALM_NAME, hashLoginServiceConfigPath);
 
-        long clientId2 = dbServiceClient.saveClient(new Client("Коля", 25,
-                new AddressDataSet("Lenina st."),
-                Arrays.asList("84956666666", "89850000000")));
-        Optional<Client> clientOptional2 = dbServiceClient.getClientById(clientId2);
-        clientOptional2.ifPresentOrElse(
-                client -> log.info("created client, name:{}", client.getName()),
-                () -> log.info("client was not created")
-        );
-        System.err.println("Client1 phones: " + clientOptional2.get().getPhones());
+        UsersWebServer usersWebServer = new UsersWebServerWithSecurity(WEB_SERVER_PORT,
+                userService, templateProcessor, userAuthService);
+
+        usersWebServer.start();
+        usersWebServer.join();
     }
 }

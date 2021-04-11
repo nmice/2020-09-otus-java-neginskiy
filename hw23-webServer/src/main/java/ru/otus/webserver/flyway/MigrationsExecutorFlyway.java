@@ -2,7 +2,7 @@ package ru.otus.webserver.flyway;
 
 import org.flywaydb.core.Flyway;
 
-public class MigrationsExecutorFlyway {
+public class MigrationsExecutorFlyway implements MigrationsExecutor {
 
     private final Flyway flyway;
 
@@ -12,7 +12,13 @@ public class MigrationsExecutorFlyway {
                 .load();
     }
 
+    @Override
     public void cleanDb() {
         flyway.clean();
+    }
+
+    @Override
+    public void executeMigrations() {
+        flyway.migrate();
     }
 }
