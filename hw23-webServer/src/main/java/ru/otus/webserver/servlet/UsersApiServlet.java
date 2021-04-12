@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import ru.otus.webserver.model.User;
 import ru.otus.webserver.service.db.DBServiceUser;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 
 
@@ -30,6 +31,14 @@ public class UsersApiServlet extends HttpServlet {
         response.setContentType("application/json;charset=UTF-8");
         ServletOutputStream out = response.getOutputStream();
         out.print(gson.toJson(user));
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try(BufferedReader reader = request.getReader()) {
+            final User user = gson.fromJson(reader.readLine(), User.class);
+            userService.saveUser(user);
+        }
     }
 
     private long extractIdFromRequest(HttpServletRequest request) {

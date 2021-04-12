@@ -52,8 +52,6 @@ import ru.otus.webserver.util.DbUtils;
 public class HomeWork {
     private static final int WEB_SERVER_PORT = 8080;
     private static final String TEMPLATES_DIR = "/templates/";
-    private static final String HASH_LOGIN_SERVICE_CONFIG_NAME = "realm.properties";
-    private static final String REALM_NAME = "AnyRealm";
     public static final String HIBERNATE_CFG_FILE = "hibernate.cfg.xml";
 
     public static void main(String[] args) throws Exception {
@@ -75,9 +73,6 @@ public class HomeWork {
         DbUtils.fillDb(userService);
         TemplateProcessor templateProcessor = new TemplateProcessorImpl(TEMPLATES_DIR);
         UserAuthService userAuthService = new UserAuthServiceImpl(userService);
-
-        String hashLoginServiceConfigPath = FileSystemHelper.localFileNameOrResourceNameToFullPath(HASH_LOGIN_SERVICE_CONFIG_NAME);
-        LoginService loginService = new HashLoginService(REALM_NAME, hashLoginServiceConfigPath);
 
         UsersWebServer usersWebServer = new UsersWebServerWithSecurity(WEB_SERVER_PORT,
                 userService, templateProcessor, userAuthService);
