@@ -19,6 +19,11 @@
             });
             window.location.reload(false);
         }
+
+        function getUsers() {
+            var loc = window.location;
+            window.location = loc.protocol + '//' + loc.host + loc.pathname + '?mode=ALL';
+        }
     </script>
 </head>
 <body>
@@ -28,6 +33,7 @@
 <input type="text" id="userPassword" placeholder="Введите пароль пользователя"><br>
 <button onclick="addUser()">Добавить</button>
 <h4>Cписок пользователей</h4>
+<button onclick="getUsers()">Посмотреть</button>
 <table style="width: 400px">
     <thead>
     <tr>
@@ -38,8 +44,15 @@
     </tr>
     </thead>
     <tbody>
+    <#list users as user>
     <tr>
+        <td>${user.id}</td>
+        <td>${user.name}</td>
+        <td>${user.login}</td>
+        <td>${user.password}</td>
     </tr>
+    </
+    #list>
     </tbody>
 </table>
 </body>

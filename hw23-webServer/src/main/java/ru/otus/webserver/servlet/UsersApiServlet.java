@@ -26,8 +26,7 @@ public class UsersApiServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        User user = userService.getUserById(extractIdFromRequest(request)).orElse(null);
-
+        var user = userService.getUserById(extractIdFromRequest(request)).orElse(null);
         response.setContentType("application/json;charset=UTF-8");
         ServletOutputStream out = response.getOutputStream();
         out.print(gson.toJson(user));
@@ -36,7 +35,7 @@ public class UsersApiServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try(BufferedReader reader = request.getReader()) {
-            final User user = gson.fromJson(reader.readLine(), User.class);
+            var user = gson.fromJson(reader.readLine(), User.class);
             userService.saveUser(user);
         }
     }

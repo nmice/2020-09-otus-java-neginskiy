@@ -66,7 +66,6 @@ public class UsersWebServerWithSecurity implements UsersWebServer {
         handlers.addHandler(resourceHandler);
         handlers.addHandler(applySecurity(servletContextHandler, "/users", "/api/user/*"));
 
-
         server.setHandler(handlers);
         return server;
     }
