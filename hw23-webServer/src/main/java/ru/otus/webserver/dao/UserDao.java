@@ -16,8 +16,6 @@ public interface UserDao {
 
     Long insertOrUpdate(User user);
 
-    void delete(User entity);
-
     Optional<User> findByLogin(String login);
 
     List<User> findAll();

@@ -17,6 +17,4 @@ public interface DBServiceUser {
     Optional<User> findByLogin(String login);
 
     List<User> findAll();
-
-    void delete(User user);
 }

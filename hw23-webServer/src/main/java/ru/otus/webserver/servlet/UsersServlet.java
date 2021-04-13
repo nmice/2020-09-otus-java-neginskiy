@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 public class UsersServlet extends HttpServlet {
 
     private static final String USERS_PAGE_TEMPLATE = "users.html";

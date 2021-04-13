@@ -79,17 +79,6 @@ public class UserDaoHibernate implements UserDao {
     }
 
     @Override
-    public void delete(User user) {
-        DatabaseSessionHibernate currentSession = sessionManager.getCurrentSession();
-        try {
-            Session hibernateSession = currentSession.getHibernateSession();
-            hibernateSession.remove(user);
-        } catch (Exception e) {
-            throw new DaoException(e);
-        }
-    }
-
-    @Override
     public Optional<User> findByLogin(String login) {
         DatabaseSessionHibernate currentSession = sessionManager.getCurrentSession();
         try {
