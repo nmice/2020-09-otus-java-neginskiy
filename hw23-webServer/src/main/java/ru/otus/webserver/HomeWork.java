@@ -1,13 +1,10 @@
 package ru.otus.webserver;
 
-import org.eclipse.jetty.security.HashLoginService;
-import org.eclipse.jetty.security.LoginService;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import ru.otus.webserver.dao.UserDaoHibernate;
 import ru.otus.webserver.flyway.MigrationsExecutor;
 import ru.otus.webserver.flyway.MigrationsExecutorFlyway;
-import ru.otus.webserver.helpers.FileSystemHelper;
 import ru.otus.webserver.hibernate.HibernateUtils;
 import ru.otus.webserver.hibernate.sessionmanager.SessionManagerHibernate;
 import ru.otus.webserver.model.User;
@@ -19,7 +16,7 @@ import ru.otus.webserver.service.auth.UserAuthService;
 import ru.otus.webserver.service.auth.UserAuthServiceImpl;
 import ru.otus.webserver.service.db.DBServiceUser;
 import ru.otus.webserver.service.db.DbServiceUserImpl;
-import ru.otus.webserver.util.DbUtils;
+import ru.otus.webserver.helpers.DbHelper;
 
 /*
     Полезные для демо ссылки
@@ -55,7 +52,7 @@ public class HomeWork {
     public static final String HIBERNATE_CFG_FILE = "hibernate.cfg.xml";
 
     public static void main(String[] args) throws Exception {
-        // Общая часть
+
         Configuration configuration = new Configuration().configure(HIBERNATE_CFG_FILE);
 
         String dbUrl = configuration.getProperty("hibernate.connection.url");
@@ -70,7 +67,7 @@ public class HomeWork {
         SessionManagerHibernate sessionManager = new SessionManagerHibernate(sessionFactory);
 
         DBServiceUser userService = new DbServiceUserImpl(new UserDaoHibernate(sessionManager));
-        DbUtils.fillDb(userService);
+        DbHelper.fillDb(userService);
         TemplateProcessor templateProcessor = new TemplateProcessorImpl(TEMPLATES_DIR);
         UserAuthService userAuthService = new UserAuthServiceImpl(userService);
 

@@ -1,6 +1,5 @@
 package ru.otus.webserver.servlet;
 
-import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -34,7 +33,7 @@ public class UsersServlet extends HttpServlet {
 
         Map<String, Object> paramsMap = new HashMap<>();
         List<User> users = new ArrayList<>();
-        if ("ALL".equals(mode)){
+        if ("ALL".equals(mode)) {
             users = userService.findAll();
         }
         paramsMap.put(TEMPLATE_USERS, users);

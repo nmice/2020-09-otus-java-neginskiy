@@ -1,11 +1,11 @@
-package ru.otus.webserver.util;
+package ru.otus.webserver.helpers;
 
 import ru.otus.webserver.model.User;
 import ru.otus.webserver.service.db.DBServiceUser;
 
 import java.util.List;
 
-public class DbUtils {
+public class DbHelper {
 
     public static void fillDb(DBServiceUser userService) {
         if (userService.findAll().isEmpty()) {
