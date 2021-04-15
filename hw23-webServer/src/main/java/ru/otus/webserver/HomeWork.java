@@ -16,20 +16,6 @@ import ru.otus.webserver.service.auth.UserAuthService;
 import ru.otus.webserver.service.auth.UserAuthServiceImpl;
 import ru.otus.webserver.service.db.DBServiceUser;
 import ru.otus.webserver.service.db.DbServiceUserImpl;
-import ru.otus.webserver.helpers.DbHelper;
-
-/*
-    Полезные для демо ссылки
-
-    // Стартовая страница
-    http://localhost:8080
-
-    // Страница пользователей
-    http://localhost:8080/users
-
-    // REST сервис
-    http://localhost:8080/api/user/3
-*/
 
 /**
  * Neginskiy M.B. 07.04.2021
@@ -45,6 +31,8 @@ import ru.otus.webserver.helpers.DbHelper;
  * с пользователями. На этой странице должны быть доступны следующие функции:
  * - создать пользователя
  * - получить список пользователей
+ * <p>
+ * Стартовая страница - http://localhost:8080
  */
 public class HomeWork {
     private static final int WEB_SERVER_PORT = 8080;
@@ -67,7 +55,6 @@ public class HomeWork {
         SessionManagerHibernate sessionManager = new SessionManagerHibernate(sessionFactory);
 
         DBServiceUser userService = new DbServiceUserImpl(new UserDaoHibernate(sessionManager));
-        DbHelper.fillDb(userService);
         TemplateProcessor templateProcessor = new TemplateProcessorImpl(TEMPLATES_DIR);
         UserAuthService userAuthService = new UserAuthServiceImpl(userService);
 
