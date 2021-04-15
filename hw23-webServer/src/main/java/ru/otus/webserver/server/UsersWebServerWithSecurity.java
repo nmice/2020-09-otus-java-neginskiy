@@ -1,7 +1,6 @@
 package ru.otus.webserver.server;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
@@ -28,15 +27,18 @@ public class UsersWebServerWithSecurity implements UsersWebServer {
     private final TemplateProcessor templateProcessor;
     private final Server server;
     private final UserAuthService userAuthService;
+    private final Gson gson;
 
     public UsersWebServerWithSecurity(int port,
                                       DBServiceUser userService,
                                       TemplateProcessor templateProcessor,
-                                      UserAuthService userAuthService) {
+                                      UserAuthService userAuthService,
+                                      Gson gson) {
         this.userService = userService;
         this.templateProcessor = templateProcessor;
         server = new Server(port);
         this.userAuthService = userAuthService;
+        this.gson = gson;
     }
 
     @Override
@@ -88,7 +90,6 @@ public class UsersWebServerWithSecurity implements UsersWebServer {
     private ServletContextHandler createServletContextHandler() {
         ServletContextHandler servletContextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
         servletContextHandler.addServlet(new ServletHolder(new UsersServlet(templateProcessor, userService)), "/users");
-        Gson gson = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
         servletContextHandler.addServlet(new ServletHolder(new UsersApiServlet(userService, gson)), "/api/user/*");
         return servletContextHandler;
     }

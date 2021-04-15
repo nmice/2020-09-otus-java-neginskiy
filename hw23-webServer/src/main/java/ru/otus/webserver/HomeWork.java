@@ -1,5 +1,7 @@
 package ru.otus.webserver;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import ru.otus.webserver.dao.UserDaoHibernate;
@@ -57,9 +59,10 @@ public class HomeWork {
         DBServiceUser userService = new DbServiceUserImpl(new UserDaoHibernate(sessionManager));
         TemplateProcessor templateProcessor = new TemplateProcessorImpl(TEMPLATES_DIR);
         UserAuthService userAuthService = new UserAuthServiceImpl(userService);
+        Gson gson = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
 
         UsersWebServer usersWebServer = new UsersWebServerWithSecurity(WEB_SERVER_PORT,
-                userService, templateProcessor, userAuthService);
+                userService, templateProcessor, userAuthService, gson);
 
         usersWebServer.start();
         usersWebServer.join();
