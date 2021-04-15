@@ -58,8 +58,8 @@ class UsersWebServerWithSecurityTest {
         given(userAuthService.authenticate(INCORRECT_USER_LOGIN, DEFAULT_USER_PASSWORD)).willReturn(false);
         given(userDao.findAll()).willReturn(Collections.singletonList(DEFAULT_USER));
 
-        gson = new GsonBuilder().serializeNulls().create();
-        webServer = new UsersWebServerWithSecurity(WEB_SERVER_PORT, userService, templateProcessor, userAuthService);
+        gson = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
+        webServer = new UsersWebServerWithSecurity(WEB_SERVER_PORT, userService, templateProcessor, userAuthService, gson);
         webServer.start();
     }
 
