@@ -1,19 +1,20 @@
 package ru.otus.executors;
 
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Neginskiy M.B. 14.04.2021
  * <p>
- * Р”РћРњРђРЁРќР•Р• Р—РђР”РђРќРР•
- * РџРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ С‡РёСЃРµР»
- * Р¦РµР»СЊ:
- * РћСЃРІРѕРёС‚СЊ Р±Р°Р·РѕРІС‹Рµ РјРµС…Р°РЅРёР·РјС‹ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёРё.
+ * ДОМАШНЕЕ ЗАДАНИЕ
+ * Последовательность чисел
+ * Цель:
+ * Освоить базовые механизмы синхронизации.
  * <p>
- * Р”РІР° РїРѕС‚РѕРєР° РїРµС‡Р°С‚Р°СЋС‚ С‡РёСЃР»Р° РѕС‚ 1 РґРѕ 10, РїРѕС‚РѕРј РѕС‚ 10 РґРѕ 1. РќР°РґРѕ СЃРґРµР»Р°С‚СЊ С‚Р°Рє, С‡С‚РѕР±С‹ С‡РёСЃР»Р° С‡РµСЂРµРґРѕРІР°Р»РёСЃСЊ,
- * С‚.Рµ. РїРѕР»СѓС‡РёР»СЃСЏ С‚Р°РєРѕР№ РІС‹РІРѕРґ: РџРѕС‚РѕРє 1: 1 3 5 7 9 9 7 5 3 1 3 5..... РџРѕС‚РѕРє 2: 2 4 6 8 10 8 6 4 2 2 4 6....
- * Р’СЃРµРіРґР° РґРѕР»Р¶РµРЅ РЅР°С‡РёРЅР°С‚СЊ РџРѕС‚РѕРє 1.
+ * Два потока печатают числа от 1 до 10, потом от 10 до 1. Надо сделать так, чтобы числа чередовались,
+ * т.е. получился такой вывод: Поток 1: 1 3 5 7 9 9 7 5 3 1 3 5..... Поток 2: 2 4 6 8 10 8 6 4 2 2 4 6....
+ * Всегда должен начинать Поток 1.
  */
 public class HomeWork {
     private static final AtomicInteger ATOMIC_INT = new AtomicInteger(1);
@@ -21,20 +22,27 @@ public class HomeWork {
     private static final AtomicBoolean SLEEP_1_FLAG = new AtomicBoolean(false);
     private static final AtomicBoolean SLEEP_2_FLAG = new AtomicBoolean(true);
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
         HomeWork homeWork = new HomeWork();
-        new Thread(() -> homeWork.algorithm("FIRST", SLEEP_1_FLAG, SLEEP_2_FLAG)).start();
-        new Thread(() -> homeWork.algorithm("SECOND", SLEEP_2_FLAG, SLEEP_1_FLAG)).start();
+        ExecutorService executor1 = Executors.newFixedThreadPool(2);
+        Future<?> f1 = executor1.submit(() -> homeWork.algorithm("FIRST", SLEEP_1_FLAG, SLEEP_2_FLAG));
+        Future<?> f2 = executor1.submit(() -> homeWork.algorithm("SECOND", SLEEP_2_FLAG, SLEEP_1_FLAG));
+        ScheduledExecutorService executor2 = Executors.newScheduledThreadPool(1);
+        executor2.scheduleAtFixedRate(() -> {
+            f1.cancel(true);
+            f2.cancel(true);
+            //executor1.shutdownNow(); - 2 вариант
+        }, 30, 1, TimeUnit.SECONDS);
     }
 
     /**
-     * Р•СЃР»Рё РЅР°РїСЂР°РІР»РµРЅРёРµ РЅР° СѓРІРµР»РёС‡РµРЅРёРµ РїРµС‡Р°С‚Р°РµРј i, РїСЂРёР±Р°РІР»СЏРµРј 1
-     * Р•СЃР»Рё i=10, РјРµРЅСЏРµРј РЅР°РїСЂР°РІР»РµРЅРёРµ
-     * Р•СЃР»Рё РЅР°РїСЂР°РІР»РµРЅРёРµ РЅР° СѓРјРµРЅСЊС€РµРЅРёРµ, РїРµС‡Р°С‚Р°РµРј i, РѕС‚РЅРёРјР°РµРј 1
-     * Р•СЃР»Рё i=1, РјРµРЅСЏРµРј РЅР°РїСЂР°РІР»РµРЅРёРµ
+     * Если направление на увеличение печатаем i, прибавляем 1
+     * Если i=10, меняем направление
+     * Если направление на уменьшение, печатаем i, отнимаем 1
+     * Если i=1, меняем направление
      */
     private synchronized void algorithm(String threadName, AtomicBoolean iMustSleep, AtomicBoolean anotherMustSleep) {
-        while (true) {
+        while (!Thread.currentThread().isInterrupted()) {
             try {
                 while (iMustSleep.get()) {
                     this.wait();
