@@ -29,10 +29,13 @@ public class HomeWork {
         Future<?> f2 = executor1.submit(() -> homeWork.algorithm("SECOND", SLEEP_2_FLAG, SLEEP_1_FLAG));
         ScheduledExecutorService executor2 = Executors.newScheduledThreadPool(1);
         executor2.scheduleAtFixedRate(() -> {
+            //executor1.shutdownNow(); - 2 вариант
             f1.cancel(true);
             f2.cancel(true);
-            //executor1.shutdownNow(); - 2 вариант
-        }, 30, 1, TimeUnit.SECONDS);
+            executor1.shutdown();
+        }, 30, 100, TimeUnit.SECONDS);
+        Thread.sleep(50000); // Ждем пока остановятся основные задачи у executor1
+        executor2.shutdownNow();   // Останавливаем выполняемую по расписанию задачу у executor2
     }
 
     /**
@@ -61,7 +64,8 @@ public class HomeWork {
                 iMustSleep.set(true);
                 anotherMustSleep.set(false);
                 notifyAll();
-            } catch (InterruptedException ignored) {
+            } catch (InterruptedException e) {
+                throw new IllegalStateException(e);
             }
         }
     }
