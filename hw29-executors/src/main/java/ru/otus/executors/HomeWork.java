@@ -32,6 +32,7 @@ public class HomeWork {
             //executor1.shutdownNow(); - 2 вариант
             f1.cancel(true);
             f2.cancel(true);
+            System.err.println("FINISHED");
             executor1.shutdown();
         }, 30, 100, TimeUnit.SECONDS);
         Thread.sleep(50000); // Ждем пока остановятся основные задачи у executor1
