@@ -65,7 +65,7 @@ public class HomeWork {
                 anotherMustSleep.set(false);
                 notifyAll();
             } catch (InterruptedException e) {
-                throw new IllegalStateException(e);
+                e.printStackTrace();
             }
         }
     }
