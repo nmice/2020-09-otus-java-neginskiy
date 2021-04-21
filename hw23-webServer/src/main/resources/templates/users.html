@@ -16,8 +16,7 @@
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(user)
-            });
-            window.location.reload(false);
+            }).then(window.location.reload(false));
         }
 
         function getUsers() {
