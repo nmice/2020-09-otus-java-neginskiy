@@ -1,4 +1,6 @@
-package ru.otus.springMvc.model;
+package ru.otus.springMvc.domain;
+
+import javax.persistence.*;
 
 @Entity
 @Table(name = "users")

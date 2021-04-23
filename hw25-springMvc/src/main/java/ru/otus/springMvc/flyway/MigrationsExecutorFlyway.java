@@ -1,7 +1,9 @@
 package ru.otus.springMvc.flyway;
 
 import org.flywaydb.core.Flyway;
+import org.springframework.stereotype.Component;
 
+@Component
 public class MigrationsExecutorFlyway implements MigrationsExecutor {
 
     private final Flyway flyway;

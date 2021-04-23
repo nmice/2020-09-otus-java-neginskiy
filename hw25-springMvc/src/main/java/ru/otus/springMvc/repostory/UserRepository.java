@@ -1,12 +1,12 @@
-package ru.otus.springMvc.dao;
+package ru.otus.springMvc.repostory;
 
-import ru.otus.webserver.model.User;
-import ru.otus.webserver.sessionmanager.SessionManager;
+import ru.otus.springMvc.domain.User;
+import ru.otus.springMvc.sessionmanager.SessionManager;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface UserDao {
+public interface UserRepository {
 
     Optional<User> findById(Long id);
 

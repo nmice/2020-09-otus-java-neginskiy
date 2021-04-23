@@ -2,7 +2,7 @@ package ru.otus.springMvc.hibernate.sessionmanager;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import ru.otus.webserver.sessionmanager.DatabaseSession;
+import ru.otus.springMvc.sessionmanager.DatabaseSession;
 
 public class DatabaseSessionHibernate implements DatabaseSession {
     private final Session session;

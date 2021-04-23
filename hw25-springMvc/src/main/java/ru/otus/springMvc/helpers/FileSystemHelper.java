@@ -19,7 +19,7 @@ public final class FileSystemHelper {
 
         if (path == null) {
             System.out.println("Local file not found, looking into resources");
-            path = Optional.ofNullable(ru.otus.webserver.helpers.FileSystemHelper.class
+            path = Optional.ofNullable(ru.otus.springMvc.helpers.FileSystemHelper.class
                     .getClassLoader()
                     .getResource(fileOrResourceName))
                     .orElseThrow(() -> new RuntimeException(String.format("File \"%s\" not found", fileOrResourceName)))

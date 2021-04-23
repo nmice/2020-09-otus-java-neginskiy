@@ -1,31 +1,33 @@
-package ru.otus.springMvc.service.db;
+package ru.otus.springMvc.services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.otus.webserver.dao.UserDao;
-import ru.otus.webserver.exception.DbServiceException;
-import ru.otus.webserver.model.User;
-import ru.otus.webserver.sessionmanager.SessionManager;
+import org.springframework.stereotype.Service;
+import ru.otus.springMvc.repostory.UserRepository;
+import ru.otus.springMvc.exception.DbServiceException;
+import ru.otus.springMvc.domain.User;
+import ru.otus.springMvc.sessionmanager.SessionManager;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class DbServiceUserImpl implements DBServiceUser {
     private static final Logger logger = LoggerFactory.getLogger(DbServiceUserImpl.class);
 
-    private final UserDao userDao;
+    private final UserRepository userRepository;
 
-    public DbServiceUserImpl(UserDao userDao) {
-        this.userDao = userDao;
+    public DbServiceUserImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
     public long saveUser(User user) {
-        try (SessionManager sessionManager = userDao.getSessionManager()) {
+        try (SessionManager sessionManager = userRepository.getSessionManager()) {
             sessionManager.beginSession();
             try {
-                Long id = userDao.insertOrUpdate(user);
+                Long id = userRepository.insertOrUpdate(user);
                 sessionManager.commitSession();
                 logger.info("created User: {}", id);
                 return id;
@@ -38,10 +40,10 @@ public class DbServiceUserImpl implements DBServiceUser {
 
     @Override
     public Optional<User> getUserById(Long id) {
-        try (SessionManager sessionManager = userDao.getSessionManager()) {
+        try (SessionManager sessionManager = userRepository.getSessionManager()) {
             sessionManager.beginSession();
             try {
-                Optional<User> userOptional = userDao.findById(id);
+                Optional<User> userOptional = userRepository.findById(id);
 
                 logger.info("User: {}", userOptional.orElse(null));
                 return userOptional;
@@ -55,10 +57,10 @@ public class DbServiceUserImpl implements DBServiceUser {
 
     @Override
     public Optional<User> findByLogin(String login) {
-        try (SessionManager sessionManager = userDao.getSessionManager()) {
+        try (SessionManager sessionManager = userRepository.getSessionManager()) {
             sessionManager.beginSession();
             try {
-                Optional<User> userOptional = userDao.findByLogin(login);
+                Optional<User> userOptional = userRepository.findByLogin(login);
                 logger.info("User: {}", userOptional.orElse(null));
                 return userOptional;
             } catch (Exception e) {
@@ -71,10 +73,10 @@ public class DbServiceUserImpl implements DBServiceUser {
 
     @Override
     public List<User> findAll() {
-        try (var sessionManager = userDao.getSessionManager()) {
+        try (var sessionManager = userRepository.getSessionManager()) {
             sessionManager.beginSession();
             try {
-                return userDao.findAll();
+                return userRepository.findAll();
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
                 sessionManager.rollbackSession();

@@ -3,8 +3,8 @@ package ru.otus.springMvc.hibernate.sessionmanager;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import ru.otus.webserver.exception.SessionManagerException;
-import ru.otus.webserver.sessionmanager.SessionManager;
+import ru.otus.springMvc.exception.SessionManagerException;
+import ru.otus.springMvc.sessionmanager.SessionManager;
 
 public class SessionManagerHibernate implements SessionManager {
 

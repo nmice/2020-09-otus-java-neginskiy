@@ -1,6 +1,6 @@
-package ru.otus.springMvc.service.db;
+package ru.otus.springMvc.services;
 
-import ru.otus.webserver.model.User;
+import ru.otus.springMvc.domain.User;
 
 import java.util.List;
 import java.util.Optional;

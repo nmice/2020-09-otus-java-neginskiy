@@ -1,27 +1,27 @@
-package ru.otus.springMvc.dao;
+package ru.otus.springMvc.repostory;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.otus.webserver.exception.DaoException;
-import ru.otus.webserver.hibernate.sessionmanager.DatabaseSessionHibernate;
-import ru.otus.webserver.hibernate.sessionmanager.SessionManagerHibernate;
-import ru.otus.webserver.model.User;
-import ru.otus.webserver.sessionmanager.SessionManager;
+import ru.otus.springMvc.exception.DaoException;
+import ru.otus.springMvc.hibernate.sessionmanager.DatabaseSessionHibernate;
+import ru.otus.springMvc.hibernate.sessionmanager.SessionManagerHibernate;
+import ru.otus.springMvc.domain.User;
+import ru.otus.springMvc.sessionmanager.SessionManager;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-public class UserDaoHibernate implements UserDao {
+public class UserRepositoryHibernate implements UserRepository {
 
-    private static final Logger logger = LoggerFactory.getLogger(UserDaoHibernate.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserRepositoryHibernate.class);
 
     private final SessionManagerHibernate sessionManager;
 
-    public UserDaoHibernate(SessionManagerHibernate sessionManager) {
+    public UserRepositoryHibernate(SessionManagerHibernate sessionManager) {
         this.sessionManager = sessionManager;
     }
 
