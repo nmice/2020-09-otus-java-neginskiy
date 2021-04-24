@@ -7,6 +7,22 @@ import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatche
 
 import javax.servlet.Filter;
 
+/**
+ * Neginskiy M.B. 21.04.2021
+ * <p>
+ * ДОМАШНЕЕ ЗАДАНИЕ
+ * Веб-приложение на Spring MVC
+ * Цель:
+ * Научиться создавать war-пакеты и запускать их в TomCat. Научиться пользоваться Thymeleaf.
+ * <p>
+ * Собрать war для приложения из ДЗ про Web Server.
+ * Создавать основные классы приложения, как Spring beans (Кэш, Dao, DBService).
+ * Настройку зависимостей выполнить с помощью Java/Annotation based конфигурации.
+ * Для обработки запросов использовать @Controller и/или @RestController.
+ * В качестве движка шаблонов использовать Thymeleaf.
+ * Запустить веб приложение во внешнем веб сервере.
+ * Авторизацию и аутентификацию делать не надо.
+ */
 public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
     //https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html
 

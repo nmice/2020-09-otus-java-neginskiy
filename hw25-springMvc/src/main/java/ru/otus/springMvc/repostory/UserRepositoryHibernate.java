@@ -5,6 +5,7 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
 import ru.otus.springMvc.exception.DaoException;
 import ru.otus.springMvc.hibernate.sessionmanager.DatabaseSessionHibernate;
 import ru.otus.springMvc.hibernate.sessionmanager.SessionManagerHibernate;
@@ -15,6 +16,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public class UserRepositoryHibernate implements UserRepository {
 
     private static final Logger logger = LoggerFactory.getLogger(UserRepositoryHibernate.class);

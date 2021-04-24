@@ -11,7 +11,7 @@ import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
 
 @Configuration
-@ComponentScan
+@ComponentScan(basePackages = "ru.otus.springMvc")
 @EnableWebMvc
 public class WebConfig implements WebMvcConfigurer {
 

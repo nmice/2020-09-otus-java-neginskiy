@@ -3,19 +3,26 @@ package ru.otus.springMvc.hibernate.sessionmanager;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+import org.springframework.stereotype.Component;
+import ru.otus.springMvc.domain.User;
 import ru.otus.springMvc.exception.SessionManagerException;
+import ru.otus.springMvc.flyway.MigrationsExecutor;
+import ru.otus.springMvc.hibernate.HibernateUtils;
 import ru.otus.springMvc.sessionmanager.SessionManager;
 
+@Component
 public class SessionManagerHibernate implements SessionManager {
 
+    public static final String HIBERNATE_CFG_FILE = "hibernate.cfg.xml";
     private DatabaseSessionHibernate databaseSession;
     private final SessionFactory sessionFactory;
 
-    public SessionManagerHibernate(SessionFactory sessionFactory) {
-        if (sessionFactory == null) {
-            throw new SessionManagerException("SessionFactory is null");
-        }
-        this.sessionFactory = sessionFactory;
+    public SessionManagerHibernate(MigrationsExecutor flyway) {
+        Configuration configuration = new Configuration().configure(HIBERNATE_CFG_FILE);
+        this.sessionFactory = HibernateUtils.buildSessionFactory(configuration, User.class);
+        flyway.cleanDb();
+        flyway.executeMigrations();
     }
 
     @Override

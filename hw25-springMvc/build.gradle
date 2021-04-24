@@ -15,6 +15,7 @@ repositories {
 dependencies {
     implementation("com.h2database:h2")
     implementation("org.hibernate:hibernate-core")
+    implementation 'org.postgresql:postgresql'
     implementation 'org.flywaydb:flyway-core'
     implementation("ch.qos.logback:logback-classic")
     implementation("com.google.code.gson:gson:2.8.6")
