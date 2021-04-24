@@ -5,19 +5,21 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
-//@PropertySource("flyway.properties")
+@PropertySource("classpath:flyway.properties")
 @Component
 public class MigrationsExecutorFlyway implements MigrationsExecutor {
 
     private final Flyway flyway;
 
-    public MigrationsExecutorFlyway(@Value("jdbc:postgresql://localhost:5432/hwDB") String dbUrl,
-                                    @Value("usr") String dbUserName,
-                                    @Value("pwd") String dbPassword) {
+    public MigrationsExecutorFlyway(@Value("${flyway.url}") String dbUrl,
+                                    @Value("${flyway.username}") String dbUserName,
+                                    @Value("${flyway.password}") String dbPassword) {
         flyway = Flyway.configure()
                 .dataSource(dbUrl, dbUserName, dbPassword)
-                .locations("classpath:/db/migration")
+                .locations("classpath:/migration")
                 .load();
+        cleanDb();
+        executeMigrations();
     }
 
     @Override

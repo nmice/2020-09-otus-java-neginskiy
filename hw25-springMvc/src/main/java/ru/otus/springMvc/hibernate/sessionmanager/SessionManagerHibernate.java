@@ -21,8 +21,6 @@ public class SessionManagerHibernate implements SessionManager {
     public SessionManagerHibernate(MigrationsExecutor flyway) {
         Configuration configuration = new Configuration().configure(HIBERNATE_CFG_FILE);
         this.sessionFactory = HibernateUtils.buildSessionFactory(configuration, User.class);
-        flyway.cleanDb();
-        flyway.executeMigrations();
     }
 
     @Override
