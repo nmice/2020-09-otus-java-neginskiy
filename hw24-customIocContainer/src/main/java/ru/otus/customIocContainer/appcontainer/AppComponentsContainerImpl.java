@@ -28,7 +28,6 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
 
     @Override
     public <C> C getAppComponent(String componentName) {
-        // Получаем бин из мапы по ключу - имени класса
         return (C) appComponentsByName.get(componentName);
     }
 
@@ -43,25 +42,17 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
 
     private void processConfig(Class<?> configClass) {
         checkConfigClass(configClass);
-        // Получить экземпляр конфига
         Object config = getConfigClassInstance(configClass);
-        // Получить список всех методов, аннотированных AppComponent, упорядочить по order
-        List<Method> beansMethods = Stream.of(configClass.getDeclaredMethods())
+        List<Method> orderedAppComponentMethods = Stream.of(configClass.getDeclaredMethods())
                 .filter(method -> method.isAnnotationPresent(AppComponent.class))
                 .sorted(Comparator.comparingInt(method -> method.getAnnotation(AppComponent.class).order()))
                 .collect(Collectors.toList());
-        // Пройти по списку методов
-        for (Method method : beansMethods) {
-            // Для каждого метода получить массив аргументов
-            var args = getArgsArrayForMethod(method);
+        for (Method method : orderedAppComponentMethods) {
+            var methodArgs = getArgsArrayForMethod(method);
             try {
-                // Получить инстанс бина, вызвав метод с аргументами у инстанса конфига
-                Object resultBean = method.invoke(config, args);
-                // Добавить бин в коллекцию
+                Object resultBean = method.invoke(config, methodArgs);
                 appComponents.add(resultBean);
-                // Получить имя бина для мапы из аннотации
                 String beanName = method.getDeclaredAnnotation(AppComponent.class).name();
-                // Добавить бин в мапу
                 appComponentsByName.put(beanName, resultBean);
             } catch (Exception e) {
                 throw new RuntimeException(e);
@@ -70,16 +61,13 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
     }
 
     private Object[] getArgsArrayForMethod(Method method) {
-        // Получить массив типов параметров метода
-        Class<?>[] parameterTypes = method.getParameterTypes();
-        // Получить массив параметров из мапы по типам
-        return Stream.of(parameterTypes)
+        Class<?>[] methodParametersTypes = method.getParameterTypes();
+        return Stream.of(methodParametersTypes)
                 .map(this::getBeanByClassName)
                 .toArray();
     }
 
     private Object getBeanByClassName(Class<?> componentClass) {
-        // Сверяем классы бинов из коллекции с запрашиваемым классом
         return appComponents.stream()
                 .filter(component -> componentClass.isAssignableFrom(component.getClass()))
                 .findAny()
