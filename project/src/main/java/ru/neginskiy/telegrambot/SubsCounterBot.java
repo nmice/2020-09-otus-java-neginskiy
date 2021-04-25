@@ -1,5 +1,8 @@
 package ru.neginskiy.telegrambot;
 
+import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.objects.Update;
+
 /**
  * За несколько дней до защиты скинуть ПР
  * Проект в отдельной ветке
@@ -20,5 +23,23 @@ package ru.neginskiy.telegrambot;
  * Cбор данных по аккаунту планирую делать с помощью открытых api соцсетей или библиотек по работе с api.
  * Хотел бы сделать интеграцию с Instagram(API Instagram Basic Display/Instagram4j).
  */
-public class Main {
+public class SubsCounterBot extends TelegramLongPollingBot{
+
+    public static void main(String[] args) {
+    }
+
+    @Override
+    public String getBotUsername() {
+        return "SubsCounterBot";
+    }
+
+    @Override
+    public String getBotToken() {
+        return "1743065351:AAHIiCdVfAMJftMmw_vXWb_Rcg_ExB6_PM8";
+    }
+
+    @Override
+    public void onUpdateReceived(Update update) {
+
+    }
 }
