@@ -7,7 +7,6 @@ import org.hibernate.cfg.Configuration;
 import org.springframework.stereotype.Component;
 import ru.otus.springMvc.domain.User;
 import ru.otus.springMvc.exception.SessionManagerException;
-import ru.otus.springMvc.flyway.MigrationsExecutor;
 import ru.otus.springMvc.hibernate.HibernateUtils;
 import ru.otus.springMvc.sessionmanager.SessionManager;
 
@@ -18,7 +17,7 @@ public class SessionManagerHibernate implements SessionManager {
     private DatabaseSessionHibernate databaseSession;
     private final SessionFactory sessionFactory;
 
-    public SessionManagerHibernate(MigrationsExecutor flyway) {
+    public SessionManagerHibernate() {
         Configuration configuration = new Configuration().configure(HIBERNATE_CFG_FILE);
         this.sessionFactory = HibernateUtils.buildSessionFactory(configuration, User.class);
     }

@@ -1,4 +1,4 @@
-package ru.otus.springMvc.flyway;
+package ru.otus.springMvc.basicDbConfig;
 
 public interface MigrationsExecutor {
     void cleanDb();

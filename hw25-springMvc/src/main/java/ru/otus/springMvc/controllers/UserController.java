@@ -22,14 +22,14 @@ public class UserController {
 
     @GetMapping({"/", "/user/list"})
     public String UsersListView(Model model) {
-        List<User> Users = userService.findAll();
-        model.addAttribute("Users", Users);
+        List<User> users = userService.findAll();
+        model.addAttribute("users", users);
         return "usersList.html";
     }
 
     @GetMapping("/user/create")
     public String UserCreateView(Model model) {
-        model.addAttribute("User", new User());
+        model.addAttribute("user", new User());
         return "userCreate.html";
     }
 

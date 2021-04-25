@@ -1,12 +1,12 @@
-package ru.otus.springMvc.flyway;
+package ru.otus.springMvc.basicDbConfig;
 
 import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
-@PropertySource("classpath:flyway.properties")
 @Component
+@PropertySource("classpath:flyway.properties")
 public class MigrationsExecutorFlyway implements MigrationsExecutor {
 
     private final Flyway flyway;

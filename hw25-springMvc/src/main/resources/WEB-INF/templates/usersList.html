@@ -5,13 +5,21 @@
     <title>List of all users</title>
 
     <script>
-        function getUser(url, valueControlName) {
-            const valueControl = document.getElementById(valueControlName);
-            const userDataContainer = document.getElementById('userDataContainer');
-            const fullUrl = url + (valueControl? (encodeURIComponent(valueControl.value)) : '');
-            fetch(fullUrl)
-                .then(response => response.json())
-                .then(user => userDataContainer.innerHTML = JSON.stringify(user));
+        function addUser() {
+            const userNameTextBox = document.getElementById('userName');
+            const userLoginTextBox = document.getElementById('userLogin');
+            const userPasswordTextBox = document.getElementById('userPassword');
+            const userName = userNameTextBox.value;
+            const userLogin = userLoginTextBox.value;
+            const userPassword = userPasswordTextBox.value;
+            const user = {name: userName, login: userLogin, password: userPassword}
+            fetch('/user/save', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(user)
+            }).then(window.location.reload(false));
         }
     </script>
 
@@ -26,17 +34,8 @@
             margin-bottom: 10px;
         }
 
-        a {
-            display: block;
-        }
-
         input {
-            width: 150px;
-        }
-
-
-        select {
-            width: 154px;
+            width: 242px;
         }
 
         button {
@@ -45,10 +44,7 @@
 
         .controls-container {
             margin-bottom: 5px;
-        }
-
-        .single-button-container {
-            margin-left: 158px;
+            padding: 2px;
         }
 
         h3 {
@@ -67,57 +63,36 @@
     </style>
 </head>
 <body>
-    <h3>Пользователи:</h3>
+<h3>Список пользователей:</h3>
+<table class="users">
+    <thead>
+    <tr>
+        <td>Id</td>
+        <td>Имя</td>
+        <td>Логин</td>
+        <td>Пароль</td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${users}">
+        <td th:text="${user.id}">1</td>
+        <td th:text="${user.name}">mikhail</td>
+        <td th:text="${user.login}">user88</td>
+        <td th:text="${user.password}">password88</td>
+    </tr>
+    </tbody>
+</table>
 
-    <table class="users">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="user : ${users}">
-                <td th:text="${user.id}">1</td>
-                <td th:text="${user.name}">John Doe</td>
-            </tr>
-        </tbody>
-    </table>
-    <a th:href="@{/user/create}" href="userCreate.html">New user</a>
+<br/><br/>
+<h3>Добавление пользователя:</h3>
 
-    <br/><br/>
-    <h3>Тест View без контроллера:</h3>
-    <a th:href="@{/no-handler-view}">Перейти на View без контроллера</a>
+<div class="controls-container">
+    <input type="text" id="userName" placeholder="Введите имя пользователя"><br>
+    <input type="text" id="userLogin" placeholder="Введите логин пользователя"><br>
+    <input type="text" id="userPassword" placeholder="Введите пароль пользователя"><br>
+    <button onclick="addUser()">Добавить пользователя</button>
+</div>
 
-
-    <br/><br/>
-    <h3>API:</h3>
-
-
-    <a th:href="@{/api/user/2}">Запрос клиента с id = 2</a>
-    <br/>
-    <br/>
-
-    <div class="controls-container">
-        <input type="text" id = "userIdTextBox" value="3" placeholder="Введите id клиента" >
-        <button onclick="getUser('api/user/', 'userIdTextBox')">Получить клиента по id</button>
-    </div>
-    <div class="controls-container">
-        <select id="usersNamesSelect">
-            <option value="Крис Гир">Крис Гир</option>
-            <option value="Ая Кэш" selected>Ая Кэш</option>
-            <option value="Десмин Боргес">Десмин Боргес</option>
-            <option value="Кетер Донохью">Кетер Донохью</option>
-            <option value="Стивен Шнайдер">Стивен Шнайдер</option>
-            <option value="Джанет Вэрни">Джанет Вэрни</option>
-            <option value="Брэндон Смит">Брэндон Смит</option>
-        </select>
-        <button onclick="getUser('api/user?name=', 'usersNamesSelect')">Получить клиента по имени</button>
-    </div>
-    <div class="controls-container single-button-container">
-        <button onclick="getUser('api/user/random')">Получить случайного клиента</button>
-    </div>
-
-    <pre id = "userDataContainer"></pre>
+<pre id="userDataContainer"></pre>
 </body>
 </html>
