@@ -1,4 +1,4 @@
-package ru.otus.springMvc.basicDbConfig;
+package ru.otus.springMvc.basicDbSetup;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;

@@ -1,4 +1,4 @@
-package ru.otus.springMvc.basicDbConfig;
+package ru.otus.springMvc.basicDbSetup;
 
 import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Value;

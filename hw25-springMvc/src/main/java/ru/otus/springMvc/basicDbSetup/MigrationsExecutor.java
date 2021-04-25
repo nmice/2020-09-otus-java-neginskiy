@@ -1,4 +1,4 @@
-package ru.otus.springMvc.basicDbConfig;
+package ru.otus.springMvc.basicDbSetup;
 
 public interface MigrationsExecutor {
     void cleanDb();

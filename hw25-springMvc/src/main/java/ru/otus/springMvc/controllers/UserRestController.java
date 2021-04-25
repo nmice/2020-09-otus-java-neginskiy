@@ -15,18 +15,8 @@ public class UserRestController {
         this.userService = userService;
     }
 
-    @GetMapping("/api/user/{id}")
-    public User getClientById(@PathVariable(name = "id") long id) {
-        return userService.getUserById(id).orElse(null);
-    }
-
-    @GetMapping("/api/user")
-    public User getUserByLogin(@RequestParam(name = "login") String login) {
-        return userService.findByLogin(login).orElse(null);
-    }
-
     @PostMapping("/api/user")
-    public Long saveClient(@RequestBody User user) {
+    public Long saveUser(@RequestBody User user) {
         return userService.saveUser(user);
     }
 

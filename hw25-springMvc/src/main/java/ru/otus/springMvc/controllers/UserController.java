@@ -24,13 +24,8 @@ public class UserController {
     public String UsersListView(Model model) {
         List<User> users = userService.findAll();
         model.addAttribute("users", users);
-        return "usersList.html";
-    }
-
-    @GetMapping("/user/create")
-    public String UserCreateView(Model model) {
         model.addAttribute("user", new User());
-        return "userCreate.html";
+        return "usersList.html";
     }
 
     @PostMapping("/user/save")

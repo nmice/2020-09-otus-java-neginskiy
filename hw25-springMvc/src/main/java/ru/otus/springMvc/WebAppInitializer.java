@@ -4,7 +4,7 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
-import ru.otus.springMvc.basicDbConfig.WebConfig;
+import ru.otus.springMvc.basicDbSetup.WebConfig;
 
 import javax.servlet.Filter;
 

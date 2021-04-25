@@ -4,25 +4,6 @@
     <meta charset="UTF-8"/>
     <title>List of all users</title>
 
-    <script>
-        function addUser() {
-            const userNameTextBox = document.getElementById('userName');
-            const userLoginTextBox = document.getElementById('userLogin');
-            const userPasswordTextBox = document.getElementById('userPassword');
-            const userName = userNameTextBox.value;
-            const userLogin = userLoginTextBox.value;
-            const userPassword = userPasswordTextBox.value;
-            const user = {name: userName, login: userLogin, password: userPassword}
-            fetch('/user/save', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(user)
-            }).then(window.location.reload(false));
-        }
-    </script>
-
     <style type="text/css">
         body {
             padding: 50px;
@@ -42,11 +23,6 @@
             width: 250px;
         }
 
-        .controls-container {
-            margin-bottom: 5px;
-            padding: 2px;
-        }
-
         h3 {
             background: url("../static/listmark.png") no-repeat;
             padding: 2px;
@@ -61,9 +37,24 @@
             padding-left: 30px;
         }
     </style>
+
 </head>
+
 <body>
+
+<h3>Добавление пользователя:</h3>
+
+<form action="#" th:action="@{/user/save}" th:object="${user}" th:method="post" accept-charset="utf-8">
+    <p><input type="text" th:field="*{name}" placeholder="Введите имя пользователя"/></p>
+    <p><input type="text" th:field="*{login}" placeholder="Введите логин пользователя"/></p>
+    <p><input type="text" th:field="*{password}" placeholder="Введите пароль пользователя"/></p>
+    <p><input type="submit" value="Добавить"/></p>
+</form>
+
+<br/><br/>
+
 <h3>Список пользователей:</h3>
+
 <table class="users">
     <thead>
     <tr>
@@ -83,16 +74,5 @@
     </tbody>
 </table>
 
-<br/><br/>
-<h3>Добавление пользователя:</h3>
-
-<div class="controls-container">
-    <input type="text" id="userName" placeholder="Введите имя пользователя"><br>
-    <input type="text" id="userLogin" placeholder="Введите логин пользователя"><br>
-    <input type="text" id="userPassword" placeholder="Введите пароль пользователя"><br>
-    <button onclick="addUser()">Добавить пользователя</button>
-</div>
-
-<pre id="userDataContainer"></pre>
 </body>
 </html>
