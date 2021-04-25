@@ -16,7 +16,7 @@
         }
 
         input {
-            width: 242px;
+            width: 250px;
         }
 
         button {
@@ -44,7 +44,7 @@
 
 <h3>Добавление пользователя:</h3>
 
-<form action="#" th:action="@{/user/save}" th:object="${user}" th:method="post" accept-charset="utf-8">
+<form th:action="@{/user/save}" th:object="${user}" th:method="post" accept-charset="utf-8">
     <p><input type="text" th:field="*{name}" placeholder="Введите имя пользователя"/></p>
     <p><input type="text" th:field="*{login}" placeholder="Введите логин пользователя"/></p>
     <p><input type="text" th:field="*{password}" placeholder="Введите пароль пользователя"/></p>
