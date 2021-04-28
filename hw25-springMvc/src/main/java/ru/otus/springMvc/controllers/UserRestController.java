@@ -20,7 +20,7 @@ public class UserRestController {
         return userService.saveUser(user);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/api/users")
+    @GetMapping("/api/users")
     public List<User> getUsers() {
         return userService.findAll();
     }

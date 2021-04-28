@@ -21,7 +21,7 @@ public class UserController {
     }
 
     @GetMapping({"/", "/user/list"})
-    public String UsersListView(Model model) {
+    public String usersListView(Model model) {
         List<User> users = userService.findAll();
         model.addAttribute("users", users);
         model.addAttribute("user", new User());
@@ -29,8 +29,8 @@ public class UserController {
     }
 
     @PostMapping("/user/save")
-    public RedirectView UserSave(@ModelAttribute User User) {
-        userService.saveUser(User);
+    public RedirectView userSave(@ModelAttribute User user) {
+        userService.saveUser(user);
         return new RedirectView("/", true);
     }
 }
