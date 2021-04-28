@@ -13,4 +13,5 @@ include 'hw21-cacheEngine'
 include 'hw23-webServer'
 include 'hw29-executors'
 include 'hw24-customIocContainer'
+include 'hw25-springMvc'
 

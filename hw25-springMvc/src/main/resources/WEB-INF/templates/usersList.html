@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>List of all users</title>
+
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        .users, .users td {
+            border: 1px solid lightgray;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+
+        input {
+            width: 250px;
+        }
+
+        button {
+            width: 250px;
+        }
+
+        h3 {
+            background: url("../static/listmark.png") no-repeat;
+            padding: 2px;
+            padding-left: 30px;
+        }
+    </style>
+
+    <style th:inline="text">
+        h3 {
+            background: url([[@{/static/listmark.png}]]) no-repeat;
+            padding: 2px;
+            padding-left: 30px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<h3>Добавление пользователя:</h3>
+
+<form th:action="@{/user/save}" th:object="${user}" th:method="post" accept-charset="utf-8">
+    <p><input type="text" th:field="*{name}" placeholder="Введите имя пользователя"/></p>
+    <p><input type="text" th:field="*{login}" placeholder="Введите логин пользователя"/></p>
+    <p><input type="text" th:field="*{password}" placeholder="Введите пароль пользователя"/></p>
+    <p><input type="submit" value="Добавить"/></p>
+</form>
+
+<br/><br/>
+
+<h3>Список пользователей:</h3>
+
+<table class="users">
+    <thead>
+    <tr>
+        <td>Id</td>
+        <td>Имя</td>
+        <td>Логин</td>
+        <td>Пароль</td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${users}">
+        <td th:text="${user.id}">1</td>
+        <td th:text="${user.name}">mikhail</td>
+        <td th:text="${user.login}">user88</td>
+        <td th:text="${user.password}">password88</td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
